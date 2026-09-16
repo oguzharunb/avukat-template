@@ -17,7 +17,39 @@ npm run lint
 npx tsc --noEmit
 ```
 
-## Düzenleme
+## Cloudflare Workers dağıtımı
+
+Bu proje Next.js API'lerini **Vinext / Vite** üzerinden çalıştırır. OpenNext
+adaptörü veya `next build` kullanılmaz. Kök `wrangler.jsonc`, derleme komutunu,
+Worker adını ve `dist` altındaki sunucu/istemci çıktılarını tanımlar.
+
+Cloudflare Workers Builds ayarları:
+
+| Ayar | Değer |
+| --- | --- |
+| Kök dizin | `/` (deponun kökü) |
+| Build command | Boş bırakılabilir; deploy komutu derlemeyi çalıştırır |
+| Deploy command | `npm run deploy` |
+| Worker adı | `avukat-template` |
+
+Mevcut `npx wrangler deploy` komutu da temiz bir klonda kök yapılandırmayı bulur
+ve derlemeyi çalıştırır. `npm run deploy`, yapılandırma dosyasını açıkça seçerek
+önceki derlemelerin yönlendirme dosyalarından bağımsız şekilde yeniden derler.
+Workers için `.next` çıktı dizini veya framework otomatik kurulumu gerekmez.
+
+```bash
+npm run deploy:check # Gerçek dağıtım yapmadan build ve Worker paketini doğrular
+npm run deploy       # Cloudflare hesabına dağıtır; kimlik doğrulama gerektirir
+```
+
+Wrangler'ın `build` / `no_bundle` / `rules` alanları doğrudan dağıtım içindir.
+Vite, kendi derlemesinde bu alanları kullanmadığına dair bilgi verebilir;
+`vite.config.ts` içindeki kaynak girişini derleyip Worker yapılandırmasını üretir.
+
+`ERESOLVE` hatasını gidermek için `--force`, `--legacy-peer-deps` veya rastgele
+Wrangler sürüm yükseltmesi gerekmez. Kilit dosyasındaki uyumlu sürümleri koruyun.
+
+## İçeriği düzenleme
 
 - `app/page.tsx`: Metinler, çalışma alanları, soru-cevaplar, menü ve görüşme notu aracı.
 - `app/globals.css`: Renkler, tipografi, mobil yerleşimler ve hareketler.
